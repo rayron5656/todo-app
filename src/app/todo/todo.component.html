@@ -8,9 +8,28 @@
 </form>
 <hr>
 <h3>Your Task</h3>
-<ul>
-    <li *ngFor="let t of tasks">
-        {{t}}
-        <button (click)="handleRemove(t)">Remove</button>
-    </li>
-</ul>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td>Tasks</td>
+            <td>Operations</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let t of tasks">
+            <td>
+                <span *ngIf="!t.isUpdating">{{t.name}}</span>
+                <span *ngIf="t.isUpdating">
+                    <input type="text" name="newTask" #newTask>
+                    <button type="submit" (click)="handleChange(t.name,newTask.value)">Save</button>
+                </span>
+            </td>
+            <td>
+                <button (click)="handleRemove(t.name)">Remove</button>
+                <button (click)="handleUpdate(t)">Update</button>
+            </td>
+
+        </tr>
+    </tbody>
+</table>
+

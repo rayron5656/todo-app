@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+
+export interface Task{
+  name:string;
+  isUpdating: boolean;
+}
 
 @Component({
   selector: 'app-todo',
@@ -8,7 +15,7 @@ import { NgForm } from '@angular/forms';
 })
 export class TodoComponent implements OnInit {
 
-  tasks:string[] = [];
+  tasks:Task[] = [];
   constructor() { 
     this.tasks = [
 
@@ -20,13 +27,23 @@ export class TodoComponent implements OnInit {
   }
 
   handleSubmit(rcivdform:NgForm){
-    let newTask = rcivdform.value.task;
+    let newTask :Task = {name : rcivdform.value.task, isUpdating : false};
     this.tasks.push(newTask);
     rcivdform.resetForm();
 
   }
   handleRemove(T:string){
-    this.tasks = this.tasks.filter((Task) => Task != T );
+    this.tasks = this.tasks.filter((Task:Task) => Task.name != T );
 
+  }
+  handleUpdate(t:Task){
+    t.isUpdating = true;
+  }
+  handleChange(oldname:string,newTaskName:string){
+
+    let updatedTask:Task = this.tasks.filter((t) => t.name === oldname)[0];
+    updatedTask.name = newTaskName;
+    updatedTask.isUpdating = false;
+    
   }
 }
