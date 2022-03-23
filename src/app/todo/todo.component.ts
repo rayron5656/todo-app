@@ -25,4 +25,8 @@ export class TodoComponent implements OnInit {
     rcivdform.resetForm();
 
   }
+  handleRemove(T:string){
+    this.tasks = this.tasks.filter((Task) => Task != T );
+
+  }
 }
