@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { take } from 'rxjs';
 
 
 export interface Task{
   name:string;
   isUpdating: boolean;
+  isVisible :boolean;
+}
+
+enum SortOptions{
+  ASC = 'asc',
+  DESC = 'desc',
+  NONE = 'none'
 }
 
 @Component({
@@ -16,6 +24,10 @@ export interface Task{
 export class TodoComponent implements OnInit {
 
   tasks:Task[] = [];
+
+  SortEnum = SortOptions;
+  sort:SortOptions = SortOptions.NONE;
+
   constructor() { 
     this.tasks = [
 
@@ -27,7 +39,7 @@ export class TodoComponent implements OnInit {
   }
 
   handleSubmit(rcivdform:NgForm){
-    let newTask :Task = {name : rcivdform.value.task, isUpdating : false};
+    let newTask :Task = {name : rcivdform.value.task, isUpdating : false,isVisible : true};
     this.tasks.push(newTask);
     rcivdform.resetForm();
 
@@ -45,5 +57,60 @@ export class TodoComponent implements OnInit {
     updatedTask.name = newTaskName;
     updatedTask.isUpdating = false;
     
+  }
+
+  handleSort(SD:SortOptions){
+    
+
+    if (SD === this.sort) {
+      this.sort = SortOptions.NONE;
+      return;
+    }
+
+    this.sort = SD;
+
+    switch (SD) {
+      case SortOptions.ASC:
+         this.tasks = this.tasks.sort((a:Task,b:Task) => {
+          let aLower = a.name.toLowerCase();
+          let bLower = b.name.toLowerCase();
+
+          if (aLower < bLower) {
+            return -1;
+          }
+          if (aLower > bLower) {
+            return 1;
+          }
+          return 0;
+         });
+        break;
+
+        case SortOptions.DESC:
+          this.tasks = this.tasks.sort((a:Task,b:Task) => {
+            let aLower = a.name.toLowerCase();
+            let bLower = b.name.toLowerCase();
+  
+            if (aLower < bLower) {
+              return 1;
+            }
+            if (aLower > bLower) {
+              return -1;
+            }
+            return 0;
+           });
+        break;
+
+      case SortOptions.NONE:
+        
+      default:
+        break;
+    }
+  }
+
+  HandleSearch(s:string){
+
+    this.tasks.map((task) => {
+      task.isVisible = (task.name.includes(s)); 
+    });
   }
 }

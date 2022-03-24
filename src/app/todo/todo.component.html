@@ -1,35 +1,50 @@
-<h1>Amazing ToDo App</h1>
+<div class="container">
+    <div class="col-12">
+        <h1>Amazing ToDo App</h1>
 <h2>track your tasks!!</h2>
 <hr>
 <h4>Add New Tasks</h4>
 <form #addForm="ngForm" (submit)="handleSubmit(addForm)">
     <input type="text" ngModel name="task">
-    <button type="submit">Add task</button>
+    <button class="btn btn-primary" type="submit">Add task</button>
 </form>
+<hr>
+<div>
+    <label for="search">
+        Search:
+        <input type="text" #searchText (keyup)="HandleSearch(searchText.value)">
+    </label>
+</div>
 <hr>
 <h3>Your Task</h3>
 <table class="table table-striped">
     <thead>
         <tr>
-            <td>Tasks</td>
+            <td>Tasks 
+                <span [class.isSorted]="sort == SortEnum.ASC" (click)="handleSort(SortEnum.ASC)">&uArr;</span> 
+                <span [class.isSorted]="sort == SortEnum.DESC" (click)="handleSort(SortEnum.DESC)">&dArr;</span>
+
+            </td>
             <td>Operations</td>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let t of tasks">
+        <tr *ngFor="let t of tasks" [hidden]="!t.isVisible">
             <td>
                 <span *ngIf="!t.isUpdating">{{t.name}}</span>
                 <span *ngIf="t.isUpdating">
-                    <input type="text" name="newTask" #newTask>
-                    <button type="submit" (click)="handleChange(t.name,newTask.value)">Save</button>
+                    <input type="text" name="newTask" #newTask value="{{t.name}}">
+                    <button class="btn btn-primary" type="submit" (click)="handleChange(t.name,newTask.value)">Save</button>
                 </span>
             </td>
             <td>
-                <button (click)="handleRemove(t.name)">Remove</button>
-                <button (click)="handleUpdate(t)">Update</button>
+                <button class="btn btn-danger" (click)="handleRemove(t.name)">Remove</button>
+                <button class="btn btn-warning" (click)="handleUpdate(t)">Update</button>
             </td>
 
         </tr>
     </tbody>
 </table>
+    </div>
+</div>
 
