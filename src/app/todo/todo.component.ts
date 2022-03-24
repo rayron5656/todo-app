@@ -25,6 +25,8 @@ export class TodoComponent implements OnInit {
 
   tasks:Task[] = [];
 
+  readonly TASKS_KEY = 'tasks';
+
   SortEnum = SortOptions;
   sort:SortOptions = SortOptions.NONE;
 
@@ -35,7 +37,10 @@ export class TodoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    let savedTasks = localStorage.getItem(this.TASKS_KEY);
+    if (savedTasks != null) {
+      this.tasks = JSON.parse(savedTasks);
+    }
   }
 
   handleSubmit(rcivdform:NgForm){
@@ -112,5 +117,9 @@ export class TodoComponent implements OnInit {
     this.tasks.map((task) => {
       task.isVisible = (task.name.includes(s)); 
     });
+  }
+
+  handleSave():void{
+    localStorage.setItem('tasks',JSON.stringify(this.tasks));
   }
 }
